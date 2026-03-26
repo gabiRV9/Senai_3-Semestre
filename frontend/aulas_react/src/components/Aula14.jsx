@@ -15,6 +15,14 @@ const Aula14 = () => {
             <br />
             <Link to='/sesisenai'> Página Inexistente </Link>
             <br />
+            <Link to='/inicio'> Inicio </Link>
+            <br />
+            <Link to='/detalhes'> Detalhes </Link>
+            <br />
+            <Link to='/contato'> Contato </Link>
+            <br />
+            <Link to='/filmes'> Filmes </Link>
+            <br />
             <h3>Navegação com progamação utilizando o useNavigate</h3>
             <button onClick={() => navigate('/sobre') } >Sobre</button>
 
