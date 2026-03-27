@@ -21,7 +21,7 @@ const Aula14 = () => {
             <br />
             <Link to='/contato'> Contato </Link>
             <br />
-            <Link to='/filmes'> Filmes </Link>
+            <Link to='/filme/homem-aranha'> Filmes </Link>
             <br />
             <h3>Navegação com progamação utilizando o useNavigate</h3>
             <button onClick={() => navigate('/sobre') } >Sobre</button>
@@ -30,6 +30,8 @@ const Aula14 = () => {
             <h3>Rota dinâmica com useParams</h3>
             <button onClick={() => navigate('/perfil/Gabriella') } >Perfil da Gabriella</button>
             <button onClick={() => navigate('/perfil/Clara') } >Perfil da Clara</button>
+            <hr />
+            <button onClick={() => navigate('/filme/enrolados') } >Filme enrolados</button>
         </div>
     )
 }
