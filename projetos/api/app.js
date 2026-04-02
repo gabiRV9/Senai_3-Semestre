@@ -1,6 +1,8 @@
 import express from 'express';
 import {BD, testarConexao} from './db.js';
 import rotasUsuarios from './src/routes/rotasUsuarios.js'
+import rotasCategorias from './src/routes/rotasCategorias.js'
+import rotasSubcategorias from './src/routes/rotasSubcategorias.js'
 // import rotasProdutos from './src/routes/rotasProdutos.js'
 //usando swagger
 import swaggerUi from 'swagger-ui-express';
@@ -21,6 +23,8 @@ app.get('/', async(req, res) =>{
 
 //Utilizando rotas
 app.use(rotasUsuarios);
+app.use(rotasCategorias);
+app.use(rotasSubcategorias);
 
 const porta = 3000;
 app.listen(porta, () =>{
