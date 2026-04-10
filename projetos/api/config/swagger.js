@@ -10,7 +10,9 @@ const documentacao = {
     ],
     tags: [
         {name: 'Usuários', description: 'Operações relacionadas aos usuários'},
-        {name: 'Categorias', description: 'Operações relacionadas as categorias'}
+        {name: 'Categorias', description: 'Operações relacionadas as categorias'},
+        {name: 'Subcategorias', description: 'Operações relacionadas as subcategorias'},
+        {name: 'Transações', description: 'Operações relacionadas as transações'}
     ],
     paths: {
         "/usuarios": {
@@ -428,7 +430,256 @@ const documentacao = {
                 }
             },
         },
+        "/transacoes":{
+             get: {
+                tags:["Transações"],
+                summary: "Listar todas as transações",
+                responses: {
+                    200:{
+                        description: "Dados obtidos com sucesso!",
+                        content: {
+                            "application/json":{
+                                schema:{
+                                    type: "array",
+                                    items: {$ref: '#/components/schemas/Listar_Transacoes'}
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            post: {
+                tags:['Transações'],
+                summary: 'Cadastrar nova transação',
+                description: "Recebe valor, descricao, data_registro, data_vencimento, data_pagamento, tipo, nome_categoria, nome_subcategoria para cadastrar nova transação",
+                requestBody: {
+                    required: true,
+                    content: {
+                        "application/json":{
+                            schema: {
+                                $ref: "#/components/schemas/Cadastrar_Transacao"
+                            }
+                        }
+                    }
+                },
+                responses: {
+                    201: {
+                        description: "Transação cadastrada com sucesso!"
+                    },
+                    500: {
+                        description: "Erro interno no servidor"
+                    }
+                }
+            }
+        },
+        "/transacoes/tipo/{tipo}":{
+             get: {
+                tags:["Transações"],
+                summary: "Listar todas as transações",
+                parameters:[
+                    {
+                        name: "tipo",
+                        in: "path",
+                        required: true,
+                        description: "tipo transação(e = Entrada / s = Saída)",
+                        schema: {type: "string", enum:["e", "s"], example: "s"}
+                    }
+                ],
+                responses: {
+                    200:{
+                        description: "Dados obtidos com sucesso!",
+                        content: {
+                            "application/json":{
+                                schema:{
+                                    type: "array",
+                                    items: {$ref: '#/components/schemas/Listar_Transacoes'}
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+        },
+        "/transacoes/{id_categoria}":{
+             get: {
+                tags:["Transações"],
+                summary: "Listar todos os id_categoria",
+                parameters:[
+                    {
+                        name: "id_categoria",
+                        in: "path",
+                        required: true,
+                        schema: {type: "string", example: "1"}
+                    }
+                ],
+                responses: {
+                    200:{
+                        description: "Dados obtidos com sucesso!",
+                        content: {
+                            "application/json":{
+                                schema:{
+                                    type: "array",
+                                    items: {$ref: '#/components/schemas/Listar_Transacoes'}
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+        },
+        "/transacoes/{id_subcategoria}":{
+             get: {
+                tags:["Transações"],
+                summary: "Listar todos os id_subcategoria",
+                parameters:[
+                    {
+                        name: "id_subcategoria",
+                        in: "path",
+                        required: true,
+                        schema: {type: "string", example: "1"}
+                    }
+                ],
+                responses: {
+                    200:{
+                        description: "Dados obtidos com sucesso!",
+                        content: {
+                            "application/json":{
+                                schema:{
+                                    type: "array",
+                                    items: {$ref: '#/components/schemas/Listar_Transacoes'}
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+        },
+        "/transacoes/periodo":{
+            get: {
+                tags:["Transações"],
+                summary: "Listar todas as transações por período",
+                parameters:[
+                    {
+                        name: "inicio",
+                        in: "query",
+                        required: true,
+                        description: "Data de início do período",
+                        schema: {type: "string", example: "10/04/2026"}
+                    },
+                    {
+                        name: "fim",
+                        in: "query",
+                        required: true,
+                        description: "Data de fim do período",
+                        schema: {type: "string", example: "13/04/2026"}
+                    }
+                ],
+                responses: {
+                    200:{
+                        description: "Dados obtidos com sucesso!",
+                        content: {
+                            "application/json":{
+                                schema:{
+                                    type: "array",
+                                    items: {$ref: '#/components/schemas/Listar_Transacoes'}
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+        },
+        "/transacoes/{id_transacao}":{
+            put: {
+                tags: ['Transações'],
+                summary: 'Atualizar todos os dados da transação',
+                description: 'Atualiza todos os dados de uma transação existente, é necessário enviar todos os campos',
+                parameters: [
+                    {
+                        name: "id_transacao",
+                        in: "path",
+                        required: true,
+                        description: "ID da transação a ser atualizado",
+                        schema: {
+                            type: 'integer',
+                            example: 1
+                        }
+                    }
+                ],
+                requestBody: {
+                    required: true,
+                    content:{
+                        "application/json":{
+                            schema: {$ref: "#/components/schemas/Atualizar_Transacao"},
+                            example: {
+                                id_transacao: {type: "integer", example: 1},
+                                valor: {type: "number", example: 10},
+                                descricao: {type: "string", example: "Consulta médica"},
+                                data_registro: {type: "string", example: "09/04/2026"},
+                                data_vencimento: {type: "string", example: "20/04/2026"},
+                                data_pagamento: {type: "string", example: "12/04/2026"},
+                                tipo: {type: "string", example: 'e'},
+                                nome_categoria: {type: "string", example: "Saúde"},
+                                nome_subcategoria: {type: "string", example: "Consulta médica"}
+                            }
+                        }
+                    }
+                },
+                responses: {
+                    201: {
+                        description: "Transação atualizada com sucesso!"
+                    },
+                    404: {
+                        description: "Transação não encontrada",
+                        content: {
+                            "application/json":{
+                                example: {message: "Transação não encontrada"}
+                            }
+                        }
+                    },
+                    500: {
+                        description: "Erro interno no servidor"
+                    }
+                    
+                }
 
+            },
+            delete: {
+                tags: ['Transações'],
+                summary: 'Remover Transação',
+                description: 'Remove transação existente pelo ID',
+                parameters: [
+                    {
+                        name: "id_transacao",
+                        in: "path",
+                        required: true,
+                        description: "ID da transação a ser removido",
+                        schema: {
+                            type: 'integer',
+                            example: 1
+                        }
+                    }
+                ],
+                responses: {
+                    200: {
+                        description: "Transação removida com sucesso!"
+                    },
+                    404: {
+                        description: "Transação não encontrada",
+                        content: {
+                            "application/json":{
+                                example: {message: "Transação não encontrada"}
+                            }
+                        }
+                    },
+                    500: {
+                        description: "Erro interno no servidor"
+                    }
+                    
+                }
+            },
+        },
+    },
     components:{
         schemas:{
             Listar_Usuarios:{
@@ -543,9 +794,50 @@ const documentacao = {
                     nome: {type: "string", example: "Saúde"},
                     id_categoria: {type: "integer", example: 2}
                 }
+            },
+            Listar_Transacoes: {
+                type: 'object',
+                properties: {
+                    id_transacao: {type: "integer", example: 1},
+                    valor: {type: "number", example: 10},
+                    descricao: {type: "string", example: "Consulta médica"},
+                    data_registro: {type: "string", example: "09/04/2026"},
+                    data_vencimento: {type: "string", example: "20/04/2026"},
+                    data_pagamento: {type: "string", example: "12/04/2026"},
+                    tipo: {type: "string",enum:["E", "S"], example: "E"},
+                    nome_categoria: {type: "string", example: "Saúde"},
+                    nome_subcategoria: {type: "string", example: "Consulta médica"},
+                }
+            },
+            Cadastrar_Transacao: {
+                type: 'object',
+                properties: {
+                    valor: {type: "number", example: 10},
+                    descricao: {type: "string", example: "Consulta médica"},
+                    data_registro: {type: "string", example: "09/04/2026"},
+                    data_vencimento: {type: "string", example: "20/04/2026"},
+                    data_pagamento: {type: "string", example: "12/04/2026"},
+                    tipo: {type: "string", example: "e"},
+                    id_categoria: {type: "integer", example: 1},
+                    id_subcategoria: {type: "integer", example: 1}
+                }
+            },
+            Atualizar_Transacao: {
+                type: 'object',
+                required: ["valor", "descricao", "data_registro", "data_vencimento", "data_pagamento", "tipo", "id_categoria", "id_subcategoria"],
+                properties: {
+                    id_transacao: {type: "integer", example: 1},
+                    valor: {type: "number", example: 10},
+                    descricao: {type: "string", example: "Consulta médica"},
+                    data_registro: {type: "string", example: "09/04/2026"},
+                    data_vencimento: {type: "string", example: "20/04/2026"},
+                    data_pagamento: {type: "string", example: "12/04/2026"},
+                    tipo: {type: "string", example: "e"},
+                    id_categoria: {type: "integer", example: 2},
+                    id_subcategoria: {type: "integer", example: 1},
+                }
             }
         }
     }
-}
 }
 export default documentacao
